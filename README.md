@@ -19,7 +19,7 @@ To experiment with the MvRadio component.
 
 3. Update the radio button demo component in `demo.js` file
 
-Includes 2 modes:
+Includes 2 themes:
 ```
 light and dark
 ```
@@ -27,11 +27,11 @@ light and dark
 ## Sample usage
 ```html
 <mv-radio
-  mode="light"        // radio button modes - can be light or dark
+  theme="light"        // theme values - can be light or dark
   .data="${[{label: "Label 1", checked: true, disabled: false, name: "groupName", value: "1" }]}"       // Array of objects for the radio buttons
   @radio-clicked="${this.handleRadioClicked}"       // custom event dispatched when the radio button is clicked  
 ></mv-radio>
 ```
 
 
-You can also check this [demo(unavailable yet)]()
+You can also check this [demo](https://radio.meveo.org/)

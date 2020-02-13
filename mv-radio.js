@@ -4,8 +4,8 @@ export class MvRadio extends LitElement {
   static get properties() {
     return {
       data: { type: Array },
-      //  valid mode values are: "light", "dark"
-      mode: { type: String, attribute: true },
+      // theme is either "light" or "dark", default: "light"
+      theme: { type: String, attribute: true },
     };
   }
 
@@ -135,11 +135,11 @@ export class MvRadio extends LitElement {
 
   constructor() {
     super();
-    this.mode = "light";
+    this.theme = "light";
   }
 
   render() {
-    return html `<div class="radio-group-container ${this.mode}">
+    return html `<div class="radio-group-container ${this.theme}">
       ${this.data.map(item => html `
           <label class="container">${item.label}
             <input

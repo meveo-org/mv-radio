@@ -86,7 +86,7 @@ export class MvRadioDemo extends LitElement {
           <h3>Radio group 1 (Light)</h3>
           <div class="group-container">
             <mv-radio
-              mode="light"
+              theme="light"
               .data="${this.numbers}"
               @radio-clicked="${this.handleNumbersClicked}"
               ></mv-radio>
@@ -99,7 +99,7 @@ export class MvRadioDemo extends LitElement {
           <h3>Radio group 2 (Dark)</h3>
           <div class="group-container">
             <mv-radio
-              mode="dark"
+              theme="dark"
               .data="${this.letters}"
               @radio-clicked="${this.handleLettersClicked}"
               ></mv-radio>
