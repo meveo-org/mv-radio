@@ -1,7 +1,17 @@
-import { LitElement, html, css, unsafeCSS } from 'lit-element';
-import './mv-radio.js';
+import { LitElement, html, css, unsafeCSS } from "lit-element";
+import "./mv-radio.js";
+import "mv-container";
 
 export class MvRadioDemo extends LitElement {
+  static get properties() {
+    return {
+      numbersLabel: { type: String },
+      numbersvalue: { type: String },
+      lettersLabel: { type: String },
+      lettersValue: { type: String },
+      theme: { type: String, attribute: true }
+    };
+  }
 
   static get styles() {
     return css`
@@ -15,40 +25,44 @@ export class MvRadioDemo extends LitElement {
         width: 100%;
         justify-content: center;
         align-items: center;
+        flex-wrap: wrap;
       }
 
       .group-container {
         width: 100%;
       }
+      
       .selection-container {
         width: 100%;
       }
-
-      .first-group {
-        width: 30%;
-        padding: 10px;
-        border: 1px solid #000;
-        border-radius: 5px;
+      
+      mv-container {
+        --mv-container-min-width: 450px;
+        --mv-container-max-width: 450px;
+        --mv-container-margin: 20px 20px;
+        --mv-container-padding: 20px 30px; 
       }
-
-      .second-group {
-        width: 30%;
-        padding: 10px;
-        border: 1px solid #000;
-        border-radius: 5px;
-        margin-left: 20px;
+      
+      fieldset > label, label > input {
+        cursor: pointer;
+      }
+      
+      fieldset {
+        width: 120px;
+        margin-left: 10px;
+        border:2px solid red;
+        -moz-border-radius: 8px;
+        -webkit-border-radius: 8px;	
+        border-radius: 8px;
+        color: #818181;
+        margin-bottom: 20px;
+      }
+      
+      legend {
+        font-weight: 500;
+        color: red;
       }
    `;
-  }
-
-  static get properties() {
-    return {
-      numbersLabel: { type: String },
-      numbersvalue: { type: String },
-      lettersLabel: { type: String },
-      lettersValue: { type: String },
-
-    };
   }
 
   constructor() {
@@ -77,29 +91,36 @@ export class MvRadioDemo extends LitElement {
       {label: "Item I", checked: false, name: "letters", value: "I" },
       {label: "Item J", checked: false, name: "letters", value: "J" }
     ];
+    this.theme = "light";
   }
 
   render() {
+    const { theme } = this;
     return html`
+      <fieldset>
+        <legend>Theme</legend>
+        <label><input type="radio" name="theme" value="light" checked @change="${this.changeTheme}" />Light</label>
+        <label><input type="radio" name="theme" value="dark" @change="${this.changeTheme}" />Dark</label>
+      </fieldset>
       <div class="container">
-        <div class="first-group">
-          <h3>Radio group 1 (Light)</h3>
+        <mv-container .theme="${theme}">
+          <h3>Radio group 1</h3>
           <div class="group-container">
             <mv-radio
-              theme="light"
+              .theme="${theme}"
               .data="${this.numbers}"
               @radio-clicked="${this.handleNumbersClicked}"
-              ></mv-radio>
+            ></mv-radio>
           </div>
           <div class="selection-container">
             Selection: ${this.numbersValue}
           </div>
-        </div>
-        <div class="second-group">
-          <h3>Radio group 2 (Dark)</h3>
+        </mv-container>
+        <mv-container .theme="${theme}">
+          <h3>Radio group 2</h3>
           <div class="group-container">
             <mv-radio
-              theme="dark"
+              .theme="${theme}"
               .data="${this.letters}"
               @radio-clicked="${this.handleLettersClicked}"
               ></mv-radio>
@@ -107,7 +128,7 @@ export class MvRadioDemo extends LitElement {
           <div class="selection-container">
             Selection: ${this.lettersValue}
           </div>
-        </div>
+        </mv-container>
       </div>
     `;
   }
@@ -123,6 +144,11 @@ export class MvRadioDemo extends LitElement {
     this.lettersValue = value;
     this.lettersLabel = label;
   }
+
+  changeTheme = originalEvent => {
+    const { target: { value } } = originalEvent;
+    this.theme = value;
+  };
 }
 
 customElements.define('mv-radio-demo', MvRadioDemo);
