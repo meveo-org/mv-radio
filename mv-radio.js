@@ -6,6 +6,13 @@ export class MvRadio extends LitElement {
       data: { type: Array },
       // theme is either "light" or "dark", default: "light"
       theme: { type: String, attribute: true },
+
+      // type is either "mutiple" or "single", default: "mutiple"
+      type: { type: String, attribute: true },
+      checked: { type: Boolean, attribute: true },
+      disabled: { type: Boolean, attribute: true },
+      label: { type: String, attribute: true },
+      value: { type: Object, attribute: true }
     };
   }
 
@@ -32,6 +39,9 @@ export class MvRadio extends LitElement {
         --dark-dark-hover-border: var(--mv-radio-dark-hover-border, 1px solid #FFFFFF);
         --radio-dark-checked-background-color: var(--mv-radio-dark-checked-background-color, #3F4753);
         --radio-dark-checkmark-background-color: var(--mv-radio-dark-checkmark-background-color, #FFFFFF);
+        --disabled-background: var(--mv-radio-disabled-background, none);
+        --disabled-border: var(--mv-radio-disabled-border, 1px solid #C7C7C7);
+        --disabled-color: var(--mv-radio-disabled-color, #C7C7C7);
       }
 
       .radio-group-container {
@@ -86,49 +96,83 @@ export class MvRadio extends LitElement {
       }
 
       .light {
-        background-color: var(--radio-light-background-color);
         color: var(--radio-light-color);
       }
 
-      .light .container .checkmark {
+      .light.container .checkmark {
         background-color: var(--radio-light-background-color);
         border: var(--radio-light-border);
       }
 
-      .light .container:hover input ~ .checkmark {
+      .light.container:hover input ~ .checkmark {
         background-color: var(--radio-light-hover-background-color);
         border: var(--radio-light-hover-border);
       }
 
-      .light .container input:checked ~ .checkmark {
+      .light.container input:checked ~ .checkmark {
         background-color: var(--radio-light-checked-background-color);
       }
 
-      .light .container .checkmark:after {
+      .light.container .checkmark:after {
         background: var(--radio-light-checkmark-background-color);
       }
 
       .dark {
         color: var(--radio-dark-color);
-        background-color: var(--radio-dark-background-color);
       }
 
-      .dark .container .checkmark {
+      .dark.container .checkmark {
         border: var(--radio-dark-border);
         background-color: var(--radio-dark-background-color);
       }
 
-      .dark .container:hover input ~ .checkmark {
+      .dark.container:hover input ~ .checkmark {
         background-color: var(--radio-dark-hover-background-color);
         border: var(--dark-dark-hover-border);
       }
 
-      .dark .container input:checked ~ .checkmark {
+      .dark.container input:checked ~ .checkmark {
         background-color: var(--radio-dark-checked-background-color);
       }
 
-      .dark .container .checkmark:after {
+      .dark.container .checkmark:after {
         background: var(--radio-dark-checkmark-background-color);
+      }
+      
+      .single {
+        display: inline;
+        margin: 0;
+        padding-left: 20px;
+      }
+      
+      .single input {
+        display: none;
+      }
+      
+      .single label {
+        cursor: pointer;
+      }
+      
+      .value {
+        margin-left: 10px;
+      }
+      
+      .container input:disabled ~ .checkmark {
+        border: var(--disabled-border);
+        pointer-events: none;
+        background-color: var(--disabled-background);
+      }
+      
+      .container:hover input:disabled ~ .checkmark {
+        border: var(--disabled-border);
+      }
+      
+      .container input:disabled + .value {
+        color: var(--disabled-color);
+      }
+      
+      .container.disabled {
+        pointer-events: none;
       }
    `;
   }
@@ -136,12 +180,16 @@ export class MvRadio extends LitElement {
   constructor() {
     super();
     this.theme = "light";
+    this.type = "multiple";
+    this.label = "";
+    this.checked = false;
+    this.disabled = false;
   }
 
-  render() {
-    return html `<div class="radio-group-container ${this.theme}">
-      ${this.data.map(item => html `
-          <label class="container">${item.label}
+  renderMutiRadio() {
+    return html`<div class="radio-group-container">
+      ${(this.data || []).map(item => html`
+          <label class="container ${this.theme}">${item.label}
             <input
               type="radio"
               name="${item.name}"
@@ -156,6 +204,46 @@ export class MvRadio extends LitElement {
     </div>`;
   }
 
+  renderSingleRadio() {
+    return html`
+      <label class="container ${this.theme} single ${this.disabled ? "disabled" : ""}">
+          ${this.checked
+          ? html`
+            <input
+              id="single-radio"
+              type="radio"
+              checked="checked"
+              ?disabled=${this.disabled}
+              @click="${this.handleClickSingleRadio}"
+            >`
+          : html`
+            <input
+              id="single-radio"
+              type="radio"
+              ?disabled=${this.disabled}
+              @click="${this.handleClickSingleRadio}"
+            >
+          `
+          }
+          ${this.label ? html`<span class="value">${this.label}</span>` : html``}
+        <label class="checkmark" for="single-radio"></label>
+      </label>
+    `;
+  }
+
+  render() {
+    if (this.type === "multiple") {
+      return html`
+        ${this.renderMutiRadio()}
+      `;
+    }
+    if (this.type === "single") {
+      return html`
+        ${this.renderSingleRadio()}
+      `;
+    }
+  }
+
   handleClick = (item) => () => {
     const { value, label } = item;
     this.dispatchEvent(
@@ -163,6 +251,18 @@ export class MvRadio extends LitElement {
         detail: { label, value }
       })
     );
+  };
+
+  handleClickSingleRadio = originalEvent => {
+    if (!this.disabled) {
+      originalEvent.stopPropagation();
+      const { value, id, checked, label } = this;
+      this.dispatchEvent(
+        new CustomEvent("radio-clicked", {
+          detail: { value, id, label, checked: !checked, originalEvent }
+        })
+      );
+    }
   }
 
 }
