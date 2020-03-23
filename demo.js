@@ -11,8 +11,8 @@ export class MvRadioDemo extends LitElement {
       lettersValue: { type: String },
       theme: { type: String, attribute: true },
       checked: { type: Boolean, attribute: false, reflect: true },
-      firstRadioList: { type: Array, attribute: false },
-      secondRadioList: { type: Array, attribute: false },
+      horizontalRadioList: { type: Array, attribute: false },
+      verticalRadioList: { type: Array, attribute: false },
       value: { type: String, attribute: false, reflect: true }
     };
   }
@@ -41,8 +41,8 @@ export class MvRadioDemo extends LitElement {
       }
       
       mv-container {
-        --mv-container-min-width: 450px;
-        --mv-container-max-width: 450px;
+        --mv-container-min-width: 350px;
+        --mv-container-max-width: 350px;
         --mv-container-margin: 20px 20px;
         --mv-container-padding: 20px 30px; 
       }
@@ -118,7 +118,7 @@ export class MvRadioDemo extends LitElement {
     this.theme = "light";
     this.checked = false;
     this.value = "NO";
-    this.firstRadioList = [
+    this.horizontalRadioList = [
       { checked: true, value: "A", id: 1, label: "Item A" },
       { checked: false, value: "B", id: 2, label: "Item B" },
       { checked: false, value: "C", id: 3, label: "Item C" },
@@ -126,7 +126,7 @@ export class MvRadioDemo extends LitElement {
       { checked: false, value: "E", id: 5, label: "Item E" }
     ];
 
-    this.secondRadioList = [
+    this.verticalRadioList = [
       { checked: true, value: "A", id: 1, label: "Item A" },
       { checked: false, value: "B", id: 2, label: "Item B" },
       { checked: false, value: "C", id: 3, label: "Item C" },
@@ -143,50 +143,51 @@ export class MvRadioDemo extends LitElement {
         <label><input type="radio" name="theme" value="light" checked @change="${this.changeTheme}" />Light</label>
         <label><input type="radio" name="theme" value="dark" @change="${this.changeTheme}" />Dark</label>
       </fieldset>
-      <mv-container .theme="${theme}">
-        <h2>Type: Single</h2>
-        <h3>Single</h3>
-        <mv-radio
-          .checked="${this.checked}"
-          .value="${{ isChecked: !this.checked }}"
-          @radio-clicked="${this.handleClickRadio}"
-          .theme="${theme}"
-          type="single"
-        ></mv-radio>
-        <div class="value${this.checked ? " checked" : ""}">${this.value}</div>
-        
-        <h3>Horizontal</h3>
-        ${this.firstRadioList.map(item => html`
-          <span class="radio-item">
-            <mv-radio
-              .checked="${item.checked}"
-              .value="${item.value}"
-              .id="${item.id}"
-              @radio-clicked="${this.handleClickFirstRadio}"
-              .theme="${theme}"
-              type="single"
-            ></mv-radio>
-          </span>
-        `)}
-         <h3>Vertical</h3>
-        <ul>
-          ${this.secondRadioList.map(item => html`
-            <li style="list-style-type: none">
+      <div class="container">
+        <mv-container .theme="${theme}">
+          <h2>Type: Single</h2>
+          <h3>Single</h3>
+          <mv-radio
+            .checked="${this.checked}"
+            .value="${{ isChecked: !this.checked }}"
+            @radio-clicked="${this.handleClickRadio}"
+            .theme="${theme}"
+            type="single"
+          ></mv-radio>
+          <div class="value${this.checked ? " checked" : ""}">${this.value}</div>
+          
+          <h3>Horizontal</h3>
+          ${this.horizontalRadioList.map(item => html`
+            <span class="radio-item">
               <mv-radio
                 .checked="${item.checked}"
                 .value="${item.value}"
-                .label="${item.label}"
                 .id="${item.id}"
-                @radio-clicked="${this.handleClickSecondRadio}"
+                @radio-clicked="${this.handleClickHorizontalRadio}"
                 .theme="${theme}"
                 type="single"
               ></mv-radio>
-            </li>
+            </span>
           `)}
-        </ul>
-        Selection: ${this.secondRadioList.find(item => item.checked).value}
-      </mv-container>
-      <div class="container">
+
+          <h3>Vertical</h3>
+          <ul>
+            ${this.verticalRadioList.map(item => html`
+              <li style="list-style-type: none">
+                <mv-radio
+                  .checked="${item.checked}"
+                  .value="${item.value}"
+                  .label="${item.label}"
+                  .id="${item.id}"
+                  @radio-clicked="${this.handleClickVerticalRadio}"
+                  .theme="${theme}"
+                  type="single"
+                ></mv-radio>
+              </li>
+            `)}
+          </ul>
+          Selection: ${this.verticalRadioList.find(item => item.checked).value}
+        </mv-container>
         <mv-container .theme="${theme}">
           <h2>Type: Multiple</h2>
           <h3>Radio group 1</h3>
@@ -242,10 +243,9 @@ export class MvRadioDemo extends LitElement {
     this.checked = checked;
   }
 
-  handleClickFirstRadio(event) {
-    const { detail: { checked, id } } = event;
-    this.checked = checked;
-    this.firstRadioList = this.firstRadioList.map(item => {
+  handleClickHorizontalRadio(event) {
+    const { detail: { id } } = event;
+    this.horizontalRadioList = this.horizontalRadioList.map(item => {
       if (item.id.toString() === id.toString()) {
         return { ...item, checked: true }
       } else {
@@ -254,10 +254,9 @@ export class MvRadioDemo extends LitElement {
     });
   }
 
-  handleClickSecondRadio(event) {
-    const { detail: { checked, id } } = event;
-    this.checked = checked;
-    this.secondRadioList = this.secondRadioList.map(item => {
+  handleClickVerticalRadio(event) {
+    const { detail: { id } } = event;
+    this.verticalRadioList = this.verticalRadioList.map(item => {
       if (item.id.toString() === id.toString()) {
         return { ...item, checked: true }
       } else {

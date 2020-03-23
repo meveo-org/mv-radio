@@ -7,12 +7,13 @@ export class MvRadio extends LitElement {
       // theme is either "light" or "dark", default: "light"
       theme: { type: String, attribute: true },
 
-      // type is either "mutiple" or "single", default: "mutiple"
+      // type is either "multiple" or "single", default: "multiple"
       type: { type: String, attribute: true },
       checked: { type: Boolean, attribute: true },
       disabled: { type: Boolean, attribute: true },
       label: { type: String, attribute: true },
-      value: { type: Object, attribute: true }
+      value: { type: Object, attribute: true },
+      id: { type: Object, attribute: true }
     };
   }
 
@@ -23,8 +24,9 @@ export class MvRadio extends LitElement {
         --font-size: var(--font-size-m, 10pt);
         --padding-left: var(--mv-radio-padding-left, 35px);
         --margin-bottom: var(--mv-radio-margin-bottom, 12px);
-        --radio-height: var(--mv-radio-radio-height, 18px);
-        --radio-width: var(--mv-radio-radio-width, 18px);
+        --radio-size: var(--mv-radio-radio-size, 18px);
+        --checkmark-size: var(--mv-radio-checkmark-size, 12px);
+        --checkmark-top: calc((var(--radio-size) - var(--checkmark-size)) / 2);
         --radio-light-background-color: var(--mv-radio-light-background-color, #FFFFFF);
         --radio-light-border: var(--mv-radio-light-border, 1px solid #4E686D);
         --radio-light-color: var(--mv-radio-light-color, #818181);
@@ -72,8 +74,8 @@ export class MvRadio extends LitElement {
         position: absolute;
         top: 0;
         left: 0;
-        height: var(--radio-height);
-        width: var(--radio-width);
+        height: var(--radio-size);
+        width: var(--radio-size);
         border-radius: 50%;
       }
 
@@ -88,10 +90,10 @@ export class MvRadio extends LitElement {
       }
 
       .container .checkmark:after {
-        top: 3px;
-        left: 3px;
-        width: 12px;
-        height: 12px;
+        top: var(--checkmark-top);
+        left: var(--checkmark-top);
+        width: var(--checkmark-size);
+        height: var(--checkmark-size);
         border-radius: 50%;
       }
 
@@ -142,7 +144,7 @@ export class MvRadio extends LitElement {
       .single {
         display: inline;
         margin: 0;
-        padding-left: 20px;
+        padding-left: calc(var(--radio-size) + 2px);
       }
       
       .single input {
@@ -153,7 +155,7 @@ export class MvRadio extends LitElement {
         cursor: pointer;
       }
       
-      .value {
+      .label {
         margin-left: 10px;
       }
       
@@ -163,16 +165,25 @@ export class MvRadio extends LitElement {
         background-color: var(--disabled-background);
       }
       
+      .container input:disabled ~ .checkmark:after {
+        background-color: var(--disabled-background);
+      }
+      
       .container:hover input:disabled ~ .checkmark {
         border: var(--disabled-border);
       }
       
-      .container input:disabled + .value {
+      .container input:disabled + .label {
         color: var(--disabled-color);
       }
       
       .container.disabled {
         pointer-events: none;
+        color: var(--disabled-color);
+      }
+      
+      .container input:checked:disabled ~ .checkmark {
+        background-color: var(--disabled-background);
       }
    `;
   }
@@ -189,7 +200,7 @@ export class MvRadio extends LitElement {
   renderMutiRadio() {
     return html`<div class="radio-group-container">
       ${(this.data || []).map(item => html`
-          <label class="container ${this.theme}">${item.label}
+          <label class="container ${this.theme} ${item.disabled ? "disabled" : ""}">${item.label}
             <input
               type="radio"
               name="${item.name}"
@@ -207,7 +218,7 @@ export class MvRadio extends LitElement {
   renderSingleRadio() {
     return html`
       <label class="container ${this.theme} single ${this.disabled ? "disabled" : ""}">
-          ${this.checked
+        ${this.checked
           ? html`
             <input
               id="single-radio"
@@ -222,10 +233,8 @@ export class MvRadio extends LitElement {
               type="radio"
               ?disabled=${this.disabled}
               @click="${this.handleClickSingleRadio}"
-            >
-          `
-          }
-          ${this.label ? html`<span class="value">${this.label}</span>` : html``}
+            >`}
+        ${this.label ? html`<span class="label">${this.label}</span>` : html``}
         <label class="checkmark" for="single-radio"></label>
       </label>
     `;
