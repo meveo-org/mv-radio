@@ -236,6 +236,7 @@ export class MvRadio extends LitElement {
             >`}
         ${this.label ? html`<span class="label">${this.label}</span>` : html``}
         <label class="checkmark" for="single-radio"></label>
+        <slot></slot>
       </label>
     `;
   }
