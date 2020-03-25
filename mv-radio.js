@@ -159,31 +159,19 @@ export class MvRadio extends LitElement {
         margin-left: 10px;
       }
       
-      .container input:disabled ~ .checkmark {
-        border: var(--disabled-border);
-        pointer-events: none;
-        background-color: var(--disabled-background);
-      }
-      
-      .container input:disabled ~ .checkmark:after {
-        background-color: var(--disabled-background);
-      }
-      
-      .container:hover input:disabled ~ .checkmark {
-        border: var(--disabled-border);
-      }
-      
-      .container input:disabled + .label {
-        color: var(--disabled-color);
-      }
-      
-      .container.disabled {
-        pointer-events: none;
-        color: var(--disabled-color);
-      }
-      
+      .container input:disabled ~ .checkmark,
+      .container:hover input:disabled ~ .checkmark,
+      .container input:disabled ~ .checkmark:after,
       .container input:checked:disabled ~ .checkmark {
+        border: var(--disabled-border);
+        pointer-events: none;
         background-color: var(--disabled-background);
+      }
+      
+      .container input:disabled + .label,
+      .container.disabled {
+        cursor: context-menu;
+        color: var(--disabled-color);
       }
    `;
   }
