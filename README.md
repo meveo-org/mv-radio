@@ -41,14 +41,15 @@ dark, light
 - `single`:
 ```html
 <mv-radio
-  .checked="${item.checked}" //checked is a boolean that determines whether the radio is selected or not
-  .value="${item.value}"     // value can be any object
-  .label="${item.label}"     // string label for the radio
-  .id="${item.id}"           // id for the radio
+  id="${item.id}"               // id for the radio
+  type="single"                 // use the single or multiple radio
+  label="${item.label}"         // string label for the radio
+  theme="${theme}"              // the light and dark theme mode
+  .value="${item.value}"        // value can be any object
+  ?checked="${item.checked}"    // boolean that determines whether the radio is selected or not
+  ?disabled="${item.disabled}"  // boolean that determines whether the radio is used or not
+  ?no-toggle="${item.noToggle}" // boolean that disables toggling of the radio
   @radio-clicked="${this.handleClickSecondRadio}"  // custom event dispatched when the radio button is clicked
-  .theme="${theme}"          //toggle the light and dark theme mode
-  type="single"              //use the single or multiple radio
-  .disabled                  //disabled is a boolean that determines whether the radio is used or not
 ></mv-radio>
 ```
 
