@@ -1,0 +1,22 @@
+{
+  "name": "@meveo-org/mv-radio",
+  "version": "1.0.0",
+  "description": "MvRadio is a Meveo radio component (based on lit-element) that renders a radio buttons",
+  "main": "mv-radio.js",
+  "scripts": {
+    "serve": "es-dev-server --node-resolve --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meveo-org/mv-radio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meveo-org/mv-radio/issues"
+  },
+  "homepage": "https://github.com/meveo-org/mv-radio#readme",
+  "devDependencies": {
+    "es-dev-server": "^1.46.1"
+  }
+}
