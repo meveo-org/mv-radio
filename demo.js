@@ -1,6 +1,6 @@
-import { LitElement, html, css, unsafeCSS } from "lit-element";
+import { LitElement, html, css, unsafeCSS } from "lit";
 import "./mv-radio.js";
-import "mv-container";
+import "@meveo-org/mv-container";
 
 export class MvRadioDemo extends LitElement {
   static get properties() {
