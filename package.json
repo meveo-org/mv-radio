@@ -1,6 +1,6 @@
 {
   "name": "@meveo-org/mv-radio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MvRadio is a Meveo radio component (based on lit-element) that renders a radio buttons",
   "main": "mv-radio.js",
   "scripts": {
